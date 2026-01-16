@@ -184,6 +184,42 @@
   background-color: #fd6d94;
 }
 
+.button i { color: #9aa3b2; }
+/* 시간/진행바 영역이 보이게 */
+#track-time {
+  height: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#current-time,
+#track-length {
+  color: #f86d92;
+  font-size: 11px;
+}
+
+/* 진행바 */
+#seek-bar-container {
+  position: relative;
+  height: 6px;
+  border-radius: 6px;
+  background-color: #ffe8ee;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#seek-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: #fd6d94;
+}
+
+    
   </style>
 </head>
 
