@@ -193,6 +193,7 @@
     /* 1️⃣ 곡 목록 (여기에 곡 추가) */
     const tracks = [
       {
+        artist: "George",
         album: "Single",
         title: "George – Like",
         audio:
@@ -201,6 +202,7 @@
           "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/george-like.png"
       },
       {
+        artist: "H.E.R",
         album: "Second",
         title: "Another Song",
         audio:
@@ -210,53 +212,126 @@
       }
     ];
 
-    /* 2️⃣ 상태/DOM */
-    let currentIndex = 0;
-    const audio = new Audio();
-    const playPauseButton = $("#play-pause-button");
-    const icon = playPauseButton.find("i");
-    const cover = $("#cover");
-    const albumName = $("#album-name");
-    const trackName = $("#track-name");
+    // ===== 2) DOM =====
+    const $playerTrack = $("#player-track");
+    const $albumName = $("#album-name");
+    const $trackName = $("#track-name");
+    const $cover = $("#cover"); // <img id="cover">
+    const $bgArtwork = $("#player-bg-artwork");
 
-    /* 3️⃣ 곡 불러오기 */
-    function loadTrack(index) {
-      const track = tracks[index];
-      audio.src = track.audio;
-      cover.attr("src", track.image);
-      albumName.text(track.album);
-      trackName.text(track.title);
+    const $playPauseButton = $("#play-pause-button");
+    const $icon = $playPauseButton.find("i");
+    const $prev = $("#play-previous");
+    const $next = $("#play-next");
+
+    const $sArea = $("#seek-bar-container");
+    const $seekBar = $("#seek-bar");
+    const $tProgress = $("#current-time");
+    const $tTime = $("#track-length");
+
+    // ===== 3) 오디오/상태 =====
+    const audio = new Audio();
+    audio.preload = "metadata";
+    let currentIndex = 0;
+    let isSeeking = false;
+
+    function formatTime(sec) {
+      if (!isFinite(sec)) return "00:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
     }
 
-    /* 처음 곡 로드 */
-    loadTrack(currentIndex);
+    function loadTrack(index, autoPlay = false) {
+      const t = tracks[index];
 
-    /* 4️⃣ 재생 / 일시정지 */
-    playPauseButton.on("click", function () {
+      // 텍스트
+      $albumName.text(t.album ?? "");
+      $trackName.text(`${t.artist} - ${t.title}`);
+
+      // 이미지
+      if ($cover.length) $cover.attr("src", t.image);
+      $bgArtwork.css("background-image", `url(${t.image})`);
+
+      // 오디오
+      audio.src = t.audio;
+
+      // UI reset
+      $seekBar.width("0%");
+      $tProgress.text("00:00");
+      $tTime.text("00:00");
+
+      if (autoPlay) {
+        audio.play();
+        $icon.attr("class", "fas fa-pause");
+        $playerTrack.addClass("active");
+      } else {
+        $icon.attr("class", "fas fa-play");
+        $playerTrack.removeClass("active");
+      }
+    }
+
+    function playPause() {
       if (audio.paused) {
         audio.play();
-        icon.attr("class", "fas fa-pause");
+        $icon.attr("class", "fas fa-pause");
+        $playerTrack.addClass("active");
       } else {
         audio.pause();
-        icon.attr("class", "fas fa-play");
+        $icon.attr("class", "fas fa-play");
+        $playerTrack.removeClass("active");
       }
-    });
+    }
 
-    /* 5️⃣ 다음 곡 / 이전 곡 (버튼 있으면 동작) */
-    $("#play-next").on("click", function () {
+    function nextTrack() {
       currentIndex = (currentIndex + 1) % tracks.length;
-      loadTrack(currentIndex);
-      audio.play();
-      icon.attr("class", "fas fa-pause");
+      loadTrack(currentIndex, true);
+    }
+
+    function prevTrack() {
+      currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(currentIndex, true);
+    }
+
+    // ===== 4) 진행바/시간 업데이트 =====
+    audio.addEventListener("loadedmetadata", () => {
+      $tTime.text(formatTime(audio.duration));
     });
 
-    $("#play-previous").on("click", function () {
-      currentIndex =
-        (currentIndex - 1 + tracks.length) % tracks.length;
-      loadTrack(currentIndex);
-      audio.play();
-      icon.attr("class", "fas fa-pause");
+    audio.addEventListener("timeupdate", () => {
+      if (isSeeking) return;
+
+      const cur = audio.currentTime;
+      const dur = audio.duration || 0;
+      const p = dur ? (cur / dur) * 100 : 0;
+
+      $tProgress.text(formatTime(cur));
+      $tTime.text(formatTime(dur));
+      $seekBar.width(p + "%");
     });
+
+    // 곡 끝나면 자동 다음곡
+    audio.addEventListener("ended", () => {
+      nextTrack();
+    });
+
+    // ===== 5) 진행바 클릭 이동 =====
+    $sArea.on("click", function (e) {
+      const offset = $(this).offset();
+      const x = e.pageX - offset.left;
+      const w = $(this).width();
+      const dur = audio.duration || 0;
+      if (!dur) return;
+      audio.currentTime = (x / w) * dur;
+    });
+
+    // ===== 6) 버튼 이벤트 =====
+    $playPauseButton.on("click", playPause);
+    $next.on("click", nextTrack);
+    $prev.on("click", prevTrack);
+
+    // ===== 7) 시작 =====
+    loadTrack(currentIndex, false);
   });
 </script>
 
