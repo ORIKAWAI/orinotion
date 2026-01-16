@@ -158,31 +158,55 @@
   <div id="player-bg-layer"></div>
 
   <!-- 플레이어 -->
-  <div id="player-container">
-    <div id="player">
-      <div id="player-track">
-        <div id="album-name">Single</div>
-        <div id="track-name">George – Like</div>
+<div id="player-container">
+  <div id="player">
+    <div id="player-track">
+      <div id="album-name">Single</div>
+      <div id="track-name">George – Like</div>
+
+      <div id="track-time">
+        <div id="current-time">00:00</div>
+        <div id="track-length">00:00</div>
       </div>
 
-      <div id="player-content">
-        <div id="album-art">
-          <img
-            src="https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/cover.jpg"
-            id="cover"
-          />
+      <div id="seek-bar-container">
+        <div id="seek-bar"></div>
+      </div>
+    </div>
+
+    <div id="player-content">
+      <div id="album-art">
+        <img
+          id="cover"
+          class="active"
+          src="https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/cover.jpg"
+        />
+        <div id="buffer-box">Buffering ...</div>
+      </div>
+
+      <div id="player-controls">
+        <div class="control">
+          <div class="button" id="play-previous">
+            <i class="fas fa-backward"></i>
+          </div>
         </div>
 
-        <div id="player-controls">
-          <div class="control">
-            <div class="button" id="play-pause-button">
-              <i class="fas fa-play"></i>
-            </div>
+        <div class="control">
+          <div class="button" id="play-pause-button">
+            <i class="fas fa-play"></i>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="button" id="play-next">
+            <i class="fas fa-forward"></i>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
