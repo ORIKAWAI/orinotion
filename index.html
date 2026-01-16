@@ -169,7 +169,7 @@
         <div id="album-art">
           <img
             src="https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/cover.jpg"
-            id="_1"
+            id="cover"
           />
         </div>
 
@@ -188,24 +188,77 @@
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
   <!-- JS -->
-  <script>
-    $(function () {
-      const playPauseButton = $("#play-pause-button");
-      const icon = playPauseButton.find("i");
-      const audio = new Audio(
-        "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/george-like.mp3"
-      );
+<script>
+  $(function () {
+    /* 1️⃣ 곡 목록 (여기에 곡 추가) */
+    const tracks = [
+      {
+        album: "Single",
+        title: "George – Like",
+        audio:
+          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/george-like.mp3",
+        image:
+          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/george-like.png"
+      },
+      {
+        album: "Second",
+        title: "Another Song",
+        audio:
+          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/second.mp3",
+        image:
+          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/second.jpg"
+      }
+    ];
 
-      playPauseButton.on("click", function () {
-        if (audio.paused) {
-          audio.play();
-          icon.attr("class", "fas fa-pause");
-        } else {
-          audio.pause();
-          icon.attr("class", "fas fa-play");
-        }
-      });
+    /* 2️⃣ 상태/DOM */
+    let currentIndex = 0;
+    const audio = new Audio();
+    const playPauseButton = $("#play-pause-button");
+    const icon = playPauseButton.find("i");
+    const cover = $("#cover");
+    const albumName = $("#album-name");
+    const trackName = $("#track-name");
+
+    /* 3️⃣ 곡 불러오기 */
+    function loadTrack(index) {
+      const track = tracks[index];
+      audio.src = track.audio;
+      cover.attr("src", track.image);
+      albumName.text(track.album);
+      trackName.text(track.title);
+    }
+
+    /* 처음 곡 로드 */
+    loadTrack(currentIndex);
+
+    /* 4️⃣ 재생 / 일시정지 */
+    playPauseButton.on("click", function () {
+      if (audio.paused) {
+        audio.play();
+        icon.attr("class", "fas fa-pause");
+      } else {
+        audio.pause();
+        icon.attr("class", "fas fa-play");
+      }
     });
-  </script>
+
+    /* 5️⃣ 다음 곡 / 이전 곡 (버튼 있으면 동작) */
+    $("#play-next").on("click", function () {
+      currentIndex = (currentIndex + 1) % tracks.length;
+      loadTrack(currentIndex);
+      audio.play();
+      icon.attr("class", "fas fa-pause");
+    });
+
+    $("#play-previous").on("click", function () {
+      currentIndex =
+        (currentIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(currentIndex);
+      audio.play();
+      icon.attr("class", "fas fa-pause");
+    });
+  });
+</script>
+
 </body>
 </html>
