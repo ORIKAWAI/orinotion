@@ -149,6 +149,41 @@
     .button:hover i {
       color: #fff;
     }
+
+    /* 시간 줄 */
+#track-time {
+  height: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#current-time,
+#track-length {
+  color: #f86d92;
+  font-size: 11px;
+}
+
+/* 진행바 */
+#seek-bar-container {
+  position: relative;
+  height: 4px;
+  border-radius: 4px;
+  background-color: #ffe8ee;
+  cursor: pointer;
+}
+
+#seek-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0%;
+  border-radius: 4px;
+  background-color: #fd6d94;
+}
+
   </style>
 </head>
 
@@ -219,7 +254,7 @@
       {
         artist: "George",
         album: "Single",
-        title: "George – Like",
+        title: "Like",
         audio:
           "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/george-like.mp3",
         image:
@@ -228,7 +263,7 @@
       {
         artist: "H.E.R",
         album: "Second",
-        title: "Another Song",
+        title: "best part",
         audio:
           "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/her-bestpart.mp3",
         image:
@@ -281,7 +316,7 @@
       audio.src = t.audio;
 
       // UI reset
-      $seekBar.width("0%");
+      $seekBar.css("width", "0%");
       $tProgress.text("00:00");
       $tTime.text("00:00");
 
@@ -331,7 +366,7 @@
 
       $tProgress.text(formatTime(cur));
       $tTime.text(formatTime(dur));
-      $seekBar.width(p + "%");
+      $seekBar.css("width", p + "%");
     });
 
     // 곡 끝나면 자동 다음곡
