@@ -1,46 +1,211 @@
-<div id="player-bg-artwork"></div>
-<div id="player-bg-layer"></div>
-<div id="player-container">
-  <div id="player">
-    <div id="player-track">
-      <div id="album-name"></div>
-      <div id="track-name"></div>
-      <div id="track-time">
-        <div id="current-time"></div>
-        <div id="track-length"></div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>Music Player</title>
+
+  <!-- FontAwesome -->
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+  />
+
+  <style>
+    * {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+        sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      background-color: #ffeff5;
+    }
+
+    #player-container {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      left: 0;
+      width: 430px;
+      height: 100px;
+      margin: -4px auto;
+    }
+
+    #player-bg-artwork {
+      position: fixed;
+      top: -30px;
+      right: -30px;
+      bottom: -30px;
+      left: -30px;
+      background-image: url("https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/cover.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50%;
+      filter: blur(40px);
+      z-index: 1;
+    }
+
+    #player-bg-layer {
+      position: fixed;
+      inset: 0;
+      background-color: #fff;
+      opacity: 0.5;
+      z-index: 2;
+    }
+
+    #player {
+      position: relative;
+      height: 100%;
+      z-index: 3;
+    }
+
+    #player-track {
+      position: absolute;
+      top: 0;
+      right: 15px;
+      left: 15px;
+      padding: 13px 22px 10px 184px;
+      background-color: #fff7f7;
+      border-radius: 15px 15px 0 0;
+      transition: 0.3s ease top;
+    }
+
+    #player-track.active {
+      top: -92px;
+    }
+
+    #album-name {
+      font-size: 17px;
+      font-weight: bold;
+      color: #54576f;
+    }
+
+    #track-name {
+      font-size: 13px;
+      color: #acaebd;
+      margin: 2px 0 13px 0;
+    }
+
+    #player-content {
+      position: relative;
+      height: 100%;
+      background-color: #fff;
+      box-shadow: 0 30px 80px #656565;
+      border-radius: 15px;
+      z-index: 2;
+    }
+
+    #album-art {
+      position: absolute;
+      top: -40px;
+      width: 115px;
+      height: 115px;
+      margin-left: 40px;
+      box-shadow: 0 0 0 10px #fff;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    #album-art img {
+      width: 100%;
+      height: 100%;
+    }
+
+    #player-controls {
+      width: 250px;
+      height: 100%;
+      margin: 0 5px 0 141px;
+      float: right;
+    }
+
+    .control {
+      width: 33.333%;
+      float: left;
+      padding: 12px 0;
+    }
+
+    .button {
+      width: 26px;
+      height: 26px;
+      padding: 25px;
+      background-color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .button i {
+      color: #d6dee7;
+      font-size: 26px;
+      text-align: center;
+    }
+
+    .button:hover {
+      background-color: #d6d6de;
+    }
+
+    .button:hover i {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 배경 -->
+  <div id="player-bg-artwork"></div>
+  <div id="player-bg-layer"></div>
+
+  <!-- 플레이어 -->
+  <div id="player-container">
+    <div id="player">
+      <div id="player-track">
+        <div id="album-name">Single</div>
+        <div id="track-name">George – Like</div>
       </div>
-      <div id="seek-bar-container">
-        <div id="seek-time"></div>
-        <div id="s-hover"></div>
-        <div id="seek-bar"></div>
-      </div>
-    </div>
-    <div id="player-content">
-      <div id="album-art">
-        <img src="https://singhimalaya.github.io/Codepen/assets/img/album-arts/1.jpg" class="active" id="_1" />
-        <img src="https://singhimalaya.github.io/Codepen/assets/img/album-arts/2.jpg" id="_2" />
-        <img src="https://singhimalaya.github.io/Codepen/assets/img/album-arts/3.jpg" id="_3" />
-        <img src="https://singhimalaya.github.io/Codepen/assets/img/album-arts/4.jpg" id="_4" />
-        <img src="https://singhimalaya.github.io/Codepen/assets/img/album-arts/5.jpg" id="_5" />
-        <div id="buffer-box">Buffering ...</div>
-      </div>
-      <div id="player-controls">
-        <div class="control">
-          <div class="button" id="play-previous">
-            <i class="fas fa-backward"></i>
-          </div>
+
+      <div id="player-content">
+        <div id="album-art">
+          <img
+            src="https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/cover.jpg"
+            id="_1"
+          />
         </div>
-        <div class="control">
-          <div class="button" id="play-pause-button">
-            <i class="fas fa-play"></i>
-          </div>
-        </div>
-        <div class="control">
-          <div class="button" id="play-next">
-            <i class="fas fa-forward"></i>
+
+        <div id="player-controls">
+          <div class="control">
+            <div class="button" id="play-pause-button">
+              <i class="fas fa-play"></i>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+  <!-- JS -->
+  <script>
+    $(function () {
+      const playPauseButton = $("#play-pause-button");
+      const icon = playPauseButton.find("i");
+      const audio = new Audio(
+        "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/george-like.mp3"
+      );
+
+      playPauseButton.on("click", function () {
+        if (audio.paused) {
+          audio.play();
+          icon.attr("class", "fas fa-pause");
+        } else {
+          audio.pause();
+          icon.attr("class", "fas fa-play");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
