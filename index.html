@@ -47,16 +47,20 @@
     }
 
     #player-container {
+ #player-container {
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
   width: 430px;
+
   height: 260px;          /* 🔧 220 → 260 */
+  overflow: visible;     /* 🔧 추가 */
+
   transform: translateY(-50%);
   margin: 0 auto;
-  overflow: visible;     /* 🔧 이게 핵심 */
 }
+
 
 
     #player {
@@ -73,12 +77,16 @@
       background-color: #fff7f7;
       border-radius: 15px 15px 0 0;
       padding: 13px 22px 22px 184px;
-      transition: 0.3s ease top;
-      z-index: 2;
+        transition: transform 0.35s ease;
+      z-index: 1;
+       padding-bottom: 34px; 
+        transform: translateY(160px); /* ✅ 시작 전: 아래로 내려서 B 뒤에 숨김 */
     }
+
 
     #player-track.active {
       top: -58px;
+       transform: translateY(0); 
     }
 
     #track-title {
@@ -143,7 +151,7 @@
       background-color: #fff;
       box-shadow: 0 30px 80px #656565;
       border-radius: 15px;
-      z-index: 1;
+      z-index: 2;
     }
 
     /* 앨범 아트 */
