@@ -52,11 +52,23 @@
   left: 0;
   right: 0;
   width: 430px;
-  height: 260px;
+
+  /* ✅ 정지 상태(=B만) 높이 */
+  height: 180px;
+  overflow: visible;
+
   transform: translateY(-50%);
   margin: 0 auto;
-  overflow: visible;
+
+  /* ✅ 상태 전환 애니메이션 */
+  transition: height 0.35s ease;
 }
+
+/* ✅ 재생 상태(=A+B 묶음) 높이 */
+#player-container.playing {
+  height: 260px; /* 필요하면 240~300 사이로 튜닝 */
+}
+
 
 
 
@@ -260,6 +272,8 @@
       const trackSub    = document.querySelector("#track-sub");
       const cover       = document.querySelector("#cover");
       const bgArtwork   = document.querySelector("#player-bg-artwork");
+      const playerContainer = document.querySelector("#player-container");
+
 
       const playBtn = document.querySelector("#play-pause-button");
       const icon    = playBtn.querySelector("i");
@@ -286,6 +300,7 @@
       function setUI(playing) {
         icon.className = playing ? "fas fa-pause" : "fas fa-play";
         playerTrack.classList.toggle("active", playing);
+        playerContainer.classList.toggle("playing", playing);
       }
 
       async function loadTrack(i, autoPlay=false) {
