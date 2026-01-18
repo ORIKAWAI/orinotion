@@ -78,17 +78,20 @@
       top: -92px;
     }
 
-    #album-name {
-      font-size: 17px;
-      font-weight: bold;
-      color: #54576f;
-    }
+    
 
-    #track-name {
-      font-size: 13px;
-      color: #acaebd;
-      margin: 2px 0 13px 0;
-    }
+    #track-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #54576f;
+  margin-bottom: 6px;
+}
+
+#track-sub {
+  font-size: 13px;
+  color: #acaebd;
+  margin-bottom: 10px;
+}
 
     #player-content {
       position: relative;
@@ -328,8 +331,8 @@
 
     // ===== 2) DOM =====
     const $playerTrack = $("#player-track");
-    const $albumName = $("#album-name");
-    const $trackName = $("#track-name");
+    const $("#track-title").text(t.title);
+    const $("#track-sub").text(t.artist);
     const $cover = $("#cover"); // <img id="cover">
     const $bgArtwork = $("#player-bg-artwork");
 
