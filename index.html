@@ -47,15 +47,17 @@
     }
 
     #player-container {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      width: 430px;
-      height: 220px;
-      transform: translateY(-50%);
-      margin: 0 auto;
-    }
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 430px;
+  height: 260px;          /* 🔧 220 → 260 */
+  transform: translateY(-50%);
+  margin: 0 auto;
+  overflow: visible;     /* 🔧 이게 핵심 */
+}
+
 
     #player {
       position: relative;
@@ -76,7 +78,7 @@
     }
 
     #player-track.active {
-      top: -92px;
+      top: -58px;
     }
 
     #track-title {
@@ -179,20 +181,20 @@
     }
 
     .button {
-      width: 26px;
-      height: 26px;
-      padding: 25px;
-      background-color: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-    }
+  width: 56px;
+  height: 56px;
+  padding: 0;                 /* 🔧 padding 제거 */
+  background-color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;              /* 🔧 */
+  align-items: center;        /* 🔧 */
+  justify-content: center;    /* 🔧 */
+}
 
-    .button i {
-      font-size: 26px;
-      color: #9aa3b2;
-    }
+.button i {
+  font-size: 26px;
+}
 
     .button:hover {
       background-color: #d6d6de;
