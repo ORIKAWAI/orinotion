@@ -36,7 +36,7 @@
       right: -30px;
       bottom: -30px;
       left: -30px;
-      background-image: url("https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/cover.jpg");
+      background-image: url("./assets/img/love1.png");
       background-repeat: no-repeat;
       background-size: cover;
       background-position: 50%;
@@ -220,7 +220,7 @@
 
       <div id="player-content">
         <div id="album-art">
-          <img id="cover" src="https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/cover.jpg" />
+          <img id="cover" src="./assets/img/love1.png" />
         </div>
 
         <div id="player-controls">
@@ -251,31 +251,32 @@
     document.addEventListener("DOMContentLoaded", () => {
       // 1) 곡 목록 (전부 jsDelivr로 통일)
       const tracks = [
-        {
-          artist: "Girl in red",
-          title: "We fell in love in October",
-          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/love1.mp3",
-          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/love1.png"
-        },
-        {
-          artist: "Sahyang & Yoi",
-          title: "Over & Over",
-          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/overover.mp3",
-          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/overover.png"
-        },
-        {
-          artist: "George",
-          title: "Like",
-          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/george-like.mp3",
-          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/george-like.png"
-        },
-        {
-          artist: "H.E.R",
-          title: "best part",
-          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/her-bestpart.mp3",
-          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/her-bestpart.png"
-        }
-      ];
+  {
+    artist: "Girl in red",
+    title: "We fell in love in October",
+    audio: "./assets/music/love1.mp3",
+    image: "./assets/img/love1.png"
+  },
+  {
+    artist: "Sahyang & Yoi",
+    title: "Over & Over",
+    audio: "./assets/music/overover.mp3",
+    image: "./assets/img/overover.png"
+  },
+  {
+    artist: "George",
+    title: "Like",
+    audio: "./assets/music/george-like.mp3",
+    image: "./assets/img/george-like.png"
+  },
+  {
+    artist: "H.E.R",
+    title: "best part",
+    audio: "./assets/music/her-bestpart.mp3",
+    image: "./assets/img/her-bestpart.png"
+  }
+];
+
 
       // 2) DOM
       const playerTrack = document.querySelector("#player-track");
