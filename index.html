@@ -66,8 +66,8 @@
       background-color: #fff7f7;
       border-radius: 15px 15px 0 0;
       transition: 0.3s ease top;
-      padding: 13px 22px 22px 184px; /* 진행바 잘림 방지 */
-      z-index: 4; /* 안전 */
+      padding: 13px 22px 22px 184px; /* 진행바/텍스트 안 잘리게 */
+      z-index: 4;
     }
 
     #player-track.active {
@@ -80,6 +80,10 @@
       color: #54576f;
       margin-bottom: 6px;
       line-height: 1.2;
+      /* 길면 말줄임(원하면 줄바꿈으로 바꿔줄 수 있음) */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     #track-sub {
@@ -87,6 +91,9 @@
       color: #acaebd;
       margin-bottom: 10px;
       line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     #player-content {
@@ -107,11 +114,14 @@
       box-shadow: 0 0 0 10px #fff;
       border-radius: 50%;
       overflow: hidden;
+      background: #fff;
     }
 
     #album-art img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     #player-controls {
@@ -210,12 +220,7 @@
 
       <div id="player-content">
         <div id="album-art">
-          <img
-            id="cover"
-            class="active"
-            src="https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/cover.jpg"
-          />
-          <div id="buffer-box">Buffering ...</div>
+          <img id="cover" src="https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/cover.jpg" />
         </div>
 
         <div id="player-controls">
@@ -241,13 +246,10 @@
     </div>
   </div>
 
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-
-  <!-- JS -->
+  <!-- JS (jQuery 없음) -->
   <script>
-    $(function () {
-      /* 1) 곡 목록 */
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1) 곡 목록 (전부 jsDelivr로 통일)
       const tracks = [
         {
           artist: "Girl in red",
@@ -276,23 +278,23 @@
       ];
 
       // 2) DOM
-      const $playerTrack = $("#player-track");
-      const $trackTitle = $("#track-title");
-      const $trackSub = $("#track-sub");
-      const $cover = $("#cover");
-      const $bgArtwork = $("#player-bg-artwork");
+      const playerTrack = document.querySelector("#player-track");
+      const trackTitle = document.querySelector("#track-title");
+      const trackSub = document.querySelector("#track-sub");
+      const cover = document.querySelector("#cover");
+      const bgArtwork = document.querySelector("#player-bg-artwork");
 
-      const $playPauseButton = $("#play-pause-button");
-      const $icon = $playPauseButton.find("i");
-      const $prev = $("#play-previous");
-      const $next = $("#play-next");
+      const playPauseButton = document.querySelector("#play-pause-button");
+      const icon = playPauseButton.querySelector("i");
+      const prevBtn = document.querySelector("#play-previous");
+      const nextBtn = document.querySelector("#play-next");
 
-      const $sArea = $("#seek-bar-container");
-      const $seekBar = $("#seek-bar");
-      const $tProgress = $("#current-time");
-      const $tTime = $("#track-length");
+      const sArea = document.querySelector("#seek-bar-container");
+      const seekBar = document.querySelector("#seek-bar");
+      const tProgress = document.querySelector("#current-time");
+      const tTime = document.querySelector("#track-length");
 
-      // 3) 오디오/상태
+      // 3) 오디오
       const audio = new Audio();
       audio.preload = "metadata";
       let currentIndex = 0;
@@ -305,16 +307,21 @@
         return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
       }
 
+      function setPlayingUI(isPlaying) {
+        icon.className = isPlaying ? "fas fa-pause" : "fas fa-play";
+        playerTrack.classList.toggle("active", isPlaying);
+      }
+
       async function loadTrack(index, autoPlay = false) {
         const t = tracks[index];
 
         // 텍스트
-        $trackTitle.text(t.title ?? "");
-        $trackSub.text(t.artist ?? "");
+        trackTitle.textContent = t.title || "";
+        trackSub.textContent = t.artist || "";
 
         // 이미지
-        if ($cover.length) $cover.attr("src", t.image);
-        $bgArtwork.css("background-image", `url(${t.image})`);
+        cover.src = t.image;
+        bgArtwork.style.backgroundImage = `url("${t.image}")`;
 
         // 오디오 리셋 + 로드
         audio.pause();
@@ -323,23 +330,19 @@
         audio.load();
 
         // UI reset
-        $seekBar.css("width", "0%");
-        $tProgress.text("00:00");
-        $tTime.text("00:00");
+        seekBar.style.width = "0%";
+        tProgress.textContent = "00:00";
+        tTime.textContent = "00:00";
+        setPlayingUI(false);
 
         if (autoPlay) {
           try {
             await audio.play();
-            $icon.attr("class", "fas fa-pause");
-            $playerTrack.addClass("active");
-          } catch (err) {
-            console.log("play() rejected:", err, "src:", audio.src);
-            $icon.attr("class", "fas fa-play");
-            $playerTrack.removeClass("active");
+            setPlayingUI(true);
+          } catch (e) {
+            console.log("play() rejected:", e);
+            setPlayingUI(false);
           }
-        } else {
-          $icon.attr("class", "fas fa-play");
-          $playerTrack.removeClass("active");
         }
       }
 
@@ -347,15 +350,13 @@
         if (audio.paused) {
           try {
             await audio.play();
-            $icon.attr("class", "fas fa-pause");
-            $playerTrack.addClass("active");
-          } catch (err) {
-            console.log("play() rejected:", err, "src:", audio.src);
+            setPlayingUI(true);
+          } catch (e) {
+            console.log("play() rejected:", e);
           }
         } else {
           audio.pause();
-          $icon.attr("class", "fas fa-play");
-          $playerTrack.removeClass("active");
+          setPlayingUI(false);
         }
       }
 
@@ -369,42 +370,45 @@
         loadTrack(currentIndex, true);
       }
 
-      // 4) 진행바/시간 업데이트
+      // 4) 시간/진행바
       audio.addEventListener("loadedmetadata", () => {
-        $tTime.text(formatTime(audio.duration));
+        tTime.textContent = formatTime(audio.duration);
       });
 
       audio.addEventListener("timeupdate", () => {
         if (isSeeking) return;
-
         const cur = audio.currentTime;
         const dur = audio.duration || 0;
         const p = dur ? (cur / dur) * 100 : 0;
-
-        $tProgress.text(formatTime(cur));
-        $tTime.text(formatTime(dur));
-        $seekBar.css("width", p + "%");
+        tProgress.textContent = formatTime(cur);
+        tTime.textContent = formatTime(dur);
+        seekBar.style.width = p + "%";
       });
 
-      // 곡 끝나면 자동 다음곡
-      audio.addEventListener("ended", () => {
-        nextTrack();
+      audio.addEventListener("ended", nextTrack);
+
+      // 진단 로그 (필요하면 남겨두고, 안정되면 지워도 됨)
+      audio.addEventListener("error", () => {
+        console.log("AUDIO ERROR code:", audio.error?.code, "src:", audio.src);
+      });
+      cover.addEventListener("error", () => {
+        console.log("IMG ERROR src:", cover.src);
       });
 
       // 5) 진행바 클릭 이동
-      $sArea.on("click", function (e) {
-        const offset = $(this).offset();
-        const x = e.pageX - offset.left;
-        const w = $(this).width();
+      sArea.addEventListener("click", (e) => {
+        const rect = sArea.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const w = rect.width;
         const dur = audio.duration || 0;
         if (!dur) return;
         audio.currentTime = (x / w) * dur;
       });
 
       // 6) 버튼 이벤트
-      $playPauseButton.on("click", playPause);
-      $next.on("click", nextTrack);
-      $prev.on("click", prevTrack);
+      playPauseButton.addEventListener("click", playPause);
+      nextBtn.addEventListener("click", nextTrack);
+      prevBtn.addEventListener("click", prevTrack);
 
       // 7) 시작
       loadTrack(currentIndex, false);
