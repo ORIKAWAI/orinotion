@@ -5,16 +5,12 @@
   <title>Music Player</title>
 
   <!-- FontAwesome -->
-  <link
-    rel="stylesheet"
-    href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
-  />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" />
 
   <style>
     * {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-        sans-serif;
+        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
@@ -40,7 +36,7 @@
       right: -30px;
       bottom: -30px;
       left: -30px;
-      background-image: url("https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/cover.jpg");
+      background-image: url("https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/cover.jpg");
       background-repeat: no-repeat;
       background-size: cover;
       background-position: 50%;
@@ -70,28 +66,28 @@
       background-color: #fff7f7;
       border-radius: 15px 15px 0 0;
       transition: 0.3s ease top;
-      padding: 13px 22px 22px 184px;
-      padding-bottom: 22px;
+      padding: 13px 22px 22px 184px; /* 진행바 잘림 방지 */
+      z-index: 4; /* 안전 */
     }
 
     #player-track.active {
       top: -92px;
     }
 
-    
-
     #track-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #54576f;
-  margin-bottom: 6px;
-}
+      font-size: 18px;
+      font-weight: 700;
+      color: #54576f;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
 
-#track-sub {
-  font-size: 13px;
-  color: #acaebd;
-  margin-bottom: 10px;
-}
+    #track-sub {
+      font-size: 13px;
+      color: #acaebd;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
 
     #player-content {
       position: relative;
@@ -141,9 +137,9 @@
     }
 
     .button i {
-      color: #d6dee7;
       font-size: 26px;
       text-align: center;
+      color: #9aa3b2;
     }
 
     .button:hover {
@@ -155,77 +151,38 @@
     }
 
     /* 시간 줄 */
-#track-time {
-  height: 12px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    #track-time {
+      height: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-#current-time,
-#track-length {
-  color: #f86d92;
-  font-size: 11px;
-}
+    #current-time,
+    #track-length {
+      color: #f86d92;
+      font-size: 11px;
+    }
 
-/* 진행바 */
-#seek-bar-container {
-  position: relative;
-  height: 4px;
-  border-radius: 4px;
-  background-color: #ffe8ee;
-  cursor: pointer;
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
+    /* 진행바 */
+    #seek-bar-container {
+      position: relative;
+      height: 6px;
+      border-radius: 6px;
+      background-color: #ffe8ee;
+      cursor: pointer;
+      overflow: hidden;
+    }
 
-#seek-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 4px;
-  width: 0%;
-  border-radius: 4px;
-  background-color: #fd6d94;
-}
-
-.button i { color: #9aa3b2; }
-/* 시간/진행바 영역이 보이게 */
-#track-time {
-  height: 12px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#current-time,
-#track-length {
-  color: #f86d92;
-  font-size: 11px;
-}
-
-/* 진행바 */
-#seek-bar-container {
-  position: relative;
-  height: 6px;
-  border-radius: 6px;
-  background-color: #ffe8ee;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-#seek-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0%;
-  background-color: #fd6d94;
-}
-
-    
+    #seek-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background-color: #fd6d94;
+    }
   </style>
 </head>
 
@@ -235,222 +192,223 @@
   <div id="player-bg-layer"></div>
 
   <!-- 플레이어 -->
-<div id="player-container">
-  <div id="player">
-    <div id="player-track">
-      <div id="track-title"></div>
-      <div id="track-sub"></div>
+  <div id="player-container">
+    <div id="player">
+      <div id="player-track">
+        <div id="track-title"></div>
+        <div id="track-sub"></div>
 
-      <div id="track-time">
-        <div id="current-time">00:00</div>
-        <div id="track-length">00:00</div>
-      </div>
-
-      <div id="seek-bar-container">
-        <div id="seek-bar"></div>
-      </div>
-    </div>
-
-    <div id="player-content">
-      <div id="album-art">
-        <img
-          id="cover"
-          class="active"
-          src="https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/cover.jpg"
-        />
-        <div id="buffer-box">Buffering ...</div>
-      </div>
-
-      <div id="player-controls">
-        <div class="control">
-          <div class="button" id="play-previous">
-            <i class="fas fa-backward"></i>
-          </div>
+        <div id="track-time">
+          <div id="current-time">00:00</div>
+          <div id="track-length">00:00</div>
         </div>
 
-        <div class="control">
-          <div class="button" id="play-pause-button">
-            <i class="fas fa-play"></i>
-          </div>
+        <div id="seek-bar-container">
+          <div id="seek-bar"></div>
+        </div>
+      </div>
+
+      <div id="player-content">
+        <div id="album-art">
+          <img
+            id="cover"
+            class="active"
+            src="https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/cover.jpg"
+          />
+          <div id="buffer-box">Buffering ...</div>
         </div>
 
-        <div class="control">
-          <div class="button" id="play-next">
-            <i class="fas fa-forward"></i>
+        <div id="player-controls">
+          <div class="control">
+            <div class="button" id="play-previous">
+              <i class="fas fa-backward"></i>
+            </div>
+          </div>
+
+          <div class="control">
+            <div class="button" id="play-pause-button">
+              <i class="fas fa-play"></i>
+            </div>
+          </div>
+
+          <div class="control">
+            <div class="button" id="play-next">
+              <i class="fas fa-forward"></i>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
   <!-- JS -->
-<script>
-  $(function () {
-    /* 1️⃣ 곡 목록 (여기에 곡 추가) */
-    const tracks = [
-      {
-        artist: "Girl in red",
-        title: "We fell in love in October",
-        audio:
-          "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/love1.mp3",
-        image:
-          "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/love1.png"
-      },
+  <script>
+    $(function () {
+      /* 1) 곡 목록 */
+      const tracks = [
+        {
+          artist: "Girl in red",
+          title: "We fell in love in October",
+          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/love1.mp3",
+          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/love1.png"
+        },
+        {
+          artist: "Sahyang & Yoi",
+          title: "Over & Over",
+          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/overover.mp3",
+          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/overover.png"
+        },
+        {
+          artist: "George",
+          title: "Like",
+          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/george-like.mp3",
+          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/george-like.png"
+        },
+        {
+          artist: "H.E.R",
+          title: "best part",
+          audio: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/her-bestpart.mp3",
+          image: "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/her-bestpart.png"
+        }
+      ];
 
-      {
-        artist: "Sahyang & Yoi",
-        title: "Over & Over",
-        audio:
-          "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/music/overover.mp3",
-        image:
-          "https://cdn.jsdelivr.net/gh/ORIKAWAI/orinotion@main/assets/img/overover.png"
-      },
-      
-      {
-        artist: "George",
-        title: "Like",
-        audio:
-          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/george-like.mp3",
-        image:
-          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/george-like.png"
-      },
-      {
-        artist: "H.E.R",
-        title: "best part",
-        audio:
-          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/music/her-bestpart.mp3",
-        image:
-          "https://raw.githubusercontent.com/ORIKAWAI/orinotion/main/assets/img/her-bestpart.png"
+      // 2) DOM
+      const $playerTrack = $("#player-track");
+      const $trackTitle = $("#track-title");
+      const $trackSub = $("#track-sub");
+      const $cover = $("#cover");
+      const $bgArtwork = $("#player-bg-artwork");
+
+      const $playPauseButton = $("#play-pause-button");
+      const $icon = $playPauseButton.find("i");
+      const $prev = $("#play-previous");
+      const $next = $("#play-next");
+
+      const $sArea = $("#seek-bar-container");
+      const $seekBar = $("#seek-bar");
+      const $tProgress = $("#current-time");
+      const $tTime = $("#track-length");
+
+      // 3) 오디오/상태
+      const audio = new Audio();
+      audio.preload = "metadata";
+      let currentIndex = 0;
+      let isSeeking = false;
+
+      function formatTime(sec) {
+        if (!isFinite(sec)) return "00:00";
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
       }
-    ];
 
-    // ===== 2) DOM =====
-    const $playerTrack = $("#player-track");
-    const $("#track-title").text(t.title);
-    const $("#track-sub").text(t.artist);
-    const $cover = $("#cover"); // <img id="cover">
-    const $bgArtwork = $("#player-bg-artwork");
+      async function loadTrack(index, autoPlay = false) {
+        const t = tracks[index];
 
-    const $playPauseButton = $("#play-pause-button");
-    const $icon = $playPauseButton.find("i");
-    const $prev = $("#play-previous");
-    const $next = $("#play-next");
+        // 텍스트
+        $trackTitle.text(t.title ?? "");
+        $trackSub.text(t.artist ?? "");
 
-    const $sArea = $("#seek-bar-container");
-    const $seekBar = $("#seek-bar");
-    const $tProgress = $("#current-time");
-    const $tTime = $("#track-length");
+        // 이미지
+        if ($cover.length) $cover.attr("src", t.image);
+        $bgArtwork.css("background-image", `url(${t.image})`);
 
-    // ===== 3) 오디오/상태 =====
-    const audio = new Audio();
-    audio.preload = "metadata";
-    let currentIndex = 0;
-    let isSeeking = false;
-
-    function formatTime(sec) {
-      if (!isFinite(sec)) return "00:00";
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-    }
-
-    function loadTrack(index, autoPlay = false) {
-      const t = tracks[index];
-
-      // 텍스트
-      $albumName.text(t.album ?? "");
-      $trackName.text(`${t.artist} - ${t.title}`);
-
-      // 이미지
-      if ($cover.length) $cover.attr("src", t.image);
-      $bgArtwork.css("background-image", `url(${t.image})`);
-
-      // 오디오
-      audio.src = t.audio;
-
-      // UI reset
-      $seekBar.css("width", "0%");
-      $tProgress.text("00:00");
-      $tTime.text("00:00");
-
-      if (autoPlay) {
-        audio.play();
-        $icon.attr("class", "fas fa-pause");
-        $playerTrack.addClass("active");
-      } else {
-        $icon.attr("class", "fas fa-play");
-        $playerTrack.removeClass("active");
-      }
-    }
-
-    function playPause() {
-      if (audio.paused) {
-        audio.play();
-        $icon.attr("class", "fas fa-pause");
-        $playerTrack.addClass("active");
-      } else {
+        // 오디오 리셋 + 로드
         audio.pause();
-        $icon.attr("class", "fas fa-play");
-        $playerTrack.removeClass("active");
+        audio.currentTime = 0;
+        audio.src = t.audio;
+        audio.load();
+
+        // UI reset
+        $seekBar.css("width", "0%");
+        $tProgress.text("00:00");
+        $tTime.text("00:00");
+
+        if (autoPlay) {
+          try {
+            await audio.play();
+            $icon.attr("class", "fas fa-pause");
+            $playerTrack.addClass("active");
+          } catch (err) {
+            console.log("play() rejected:", err, "src:", audio.src);
+            $icon.attr("class", "fas fa-play");
+            $playerTrack.removeClass("active");
+          }
+        } else {
+          $icon.attr("class", "fas fa-play");
+          $playerTrack.removeClass("active");
+        }
       }
-    }
 
-    function nextTrack() {
-      currentIndex = (currentIndex + 1) % tracks.length;
-      loadTrack(currentIndex, true);
-    }
+      async function playPause() {
+        if (audio.paused) {
+          try {
+            await audio.play();
+            $icon.attr("class", "fas fa-pause");
+            $playerTrack.addClass("active");
+          } catch (err) {
+            console.log("play() rejected:", err, "src:", audio.src);
+          }
+        } else {
+          audio.pause();
+          $icon.attr("class", "fas fa-play");
+          $playerTrack.removeClass("active");
+        }
+      }
 
-    function prevTrack() {
-      currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-      loadTrack(currentIndex, true);
-    }
+      function nextTrack() {
+        currentIndex = (currentIndex + 1) % tracks.length;
+        loadTrack(currentIndex, true);
+      }
 
-    // ===== 4) 진행바/시간 업데이트 =====
-    audio.addEventListener("loadedmetadata", () => {
-      $tTime.text(formatTime(audio.duration));
+      function prevTrack() {
+        currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+        loadTrack(currentIndex, true);
+      }
+
+      // 4) 진행바/시간 업데이트
+      audio.addEventListener("loadedmetadata", () => {
+        $tTime.text(formatTime(audio.duration));
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        if (isSeeking) return;
+
+        const cur = audio.currentTime;
+        const dur = audio.duration || 0;
+        const p = dur ? (cur / dur) * 100 : 0;
+
+        $tProgress.text(formatTime(cur));
+        $tTime.text(formatTime(dur));
+        $seekBar.css("width", p + "%");
+      });
+
+      // 곡 끝나면 자동 다음곡
+      audio.addEventListener("ended", () => {
+        nextTrack();
+      });
+
+      // 5) 진행바 클릭 이동
+      $sArea.on("click", function (e) {
+        const offset = $(this).offset();
+        const x = e.pageX - offset.left;
+        const w = $(this).width();
+        const dur = audio.duration || 0;
+        if (!dur) return;
+        audio.currentTime = (x / w) * dur;
+      });
+
+      // 6) 버튼 이벤트
+      $playPauseButton.on("click", playPause);
+      $next.on("click", nextTrack);
+      $prev.on("click", prevTrack);
+
+      // 7) 시작
+      loadTrack(currentIndex, false);
     });
-
-    audio.addEventListener("timeupdate", () => {
-      if (isSeeking) return;
-
-      const cur = audio.currentTime;
-      const dur = audio.duration || 0;
-      const p = dur ? (cur / dur) * 100 : 0;
-
-      $tProgress.text(formatTime(cur));
-      $tTime.text(formatTime(dur));
-      $seekBar.css("width", p + "%");
-    });
-
-    // 곡 끝나면 자동 다음곡
-    audio.addEventListener("ended", () => {
-      nextTrack();
-    });
-
-    // ===== 5) 진행바 클릭 이동 =====
-    $sArea.on("click", function (e) {
-      const offset = $(this).offset();
-      const x = e.pageX - offset.left;
-      const w = $(this).width();
-      const dur = audio.duration || 0;
-      if (!dur) return;
-      audio.currentTime = (x / w) * dur;
-    });
-
-    // ===== 6) 버튼 이벤트 =====
-    $playPauseButton.on("click", playPause);
-    $next.on("click", nextTrack);
-    $prev.on("click", prevTrack);
-
-    // ===== 7) 시작 =====
-    loadTrack(currentIndex, false);
-  });
-</script>
-
+  </script>
 </body>
 </html>
