@@ -89,14 +89,25 @@
   border-radius: 15px 15px 0 0;
   padding: 13px 22px 22px 184px;
 
-  z-index: 1;                 /* A는 B 뒤 */
-  padding-bottom: 34px;       /* 재생바 아래 살짝 여유 */
-  transform: translateY(160px); /* 시작 전: 아래로 내려가서 B 뒤에 숨김 */
-  transition: transform 0.35s ease;
+  z-index: 1;
+  padding-bottom: 34px;
+
+  /* 🔧 여기부터 핵심 */
+  transform: translateY(120px);      /* ⬅ 덜 내려가게 (160 → 120) */
+  opacity: 0.35;                     /* ⬅ 많이 어둡게 */
+  filter: blur(1.5px);               /* ⬅ 뒤에 숨어있는 느낌 */
+  transition:
+    transform 0.35s ease,
+    opacity 0.25s ease,
+    filter 0.25s ease;
 }
 
+    
+
 #player-track.active {
-  transform: translateY(0);   /* 재생 시: 위로 올라옴 */
+  transform: translateY(0);
+  opacity: 1;
+  filter: none;
 }
 
     #track-title {
