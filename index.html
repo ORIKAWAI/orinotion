@@ -56,8 +56,8 @@
     #player {
   position: relative;
   z-index: 3;
+  height: 100%;   /* 추가 */
 }
-
 
     #player-track {
       position: absolute;
@@ -97,7 +97,10 @@
       text-overflow: ellipsis;
     }
 
-    #player-content {
+    #player-content::after {
+      content: "";
+  display: block;
+  clear: both;
       position: relative;
       height: 100%;
       background-color: #fff;
@@ -106,8 +109,7 @@
       z-index: 1;
       overflow: visible;
       margin-top: 40px;
-    }
-
+    
     #album-art {
       z-index: 3;
       position: absolute;
