@@ -53,10 +53,10 @@
     }
 
     #player {
-      position: relative;
-      height: 100%;
-      z-index: 3;
-    }
+  position: relative;
+  z-index: 3;
+}
+
 
     #player-track {
       position: absolute;
@@ -67,7 +67,7 @@
       border-radius: 15px 15px 0 0;
       transition: 0.3s ease top;
       padding: 13px 22px 22px 184px; /* 진행바/텍스트 안 잘리게 */
-      z-index: 4;
+      z-index: 5;
     }
 
     #player-track.active {
@@ -102,10 +102,12 @@
       background-color: #fff;
       box-shadow: 0 30px 80px #656565;
       border-radius: 15px;
-      z-index: 2;
+      z-index: 3;
+      overflow: visible;
     }
 
     #album-art {
+      z-index: 3;
       position: absolute;
       top: -40px;
       width: 115px;
