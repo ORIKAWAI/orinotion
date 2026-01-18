@@ -46,20 +46,18 @@
       pointer-events: none; /* ✅ 오버레이가 클릭 막지 않게 */
     }
 
-    #player-container {
- #player-container {
+   #player-container {
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
   width: 430px;
-
-  height: 260px;          /* 🔧 220 → 260 */
-  overflow: visible;     /* 🔧 추가 */
-
+  height: 260px;
+  overflow: visible;
   transform: translateY(-50%);
   margin: 0 auto;
 }
+
 
 
 
@@ -68,26 +66,24 @@
       height: 100%;
     }
 
-    /* 상단 정보 카드 */
     #player-track {
-      position: absolute;
-      top: 0;
-      left: 15px;
-      right: 15px;
-      background-color: #fff7f7;
-      border-radius: 15px 15px 0 0;
-      padding: 13px 22px 22px 184px;
-        transition: transform 0.35s ease;
-      z-index: 1;
-       padding-bottom: 34px; 
-        transform: translateY(160px); /* ✅ 시작 전: 아래로 내려서 B 뒤에 숨김 */
-    }
+  position: absolute;
+  top: 0;
+  left: 15px;
+  right: 15px;
+  background-color: #fff7f7;
+  border-radius: 15px 15px 0 0;
+  padding: 13px 22px 22px 184px;
 
+  z-index: 1;                 /* A는 B 뒤 */
+  padding-bottom: 34px;       /* 재생바 아래 살짝 여유 */
+  transform: translateY(160px); /* 시작 전: 아래로 내려가서 B 뒤에 숨김 */
+  transition: transform 0.35s ease;
+}
 
-    #player-track.active {
-      top: -58px;
-       transform: translateY(0); 
-    }
+#player-track.active {
+  transform: translateY(0);   /* 재생 시: 위로 올라옴 */
+}
 
     #track-title {
       font-size: 18px;
