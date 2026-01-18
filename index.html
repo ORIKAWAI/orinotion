@@ -20,17 +20,19 @@
       background-color: #ffeff5;
     }
 
+    /* ✅ 컨테이너: 중앙정렬 + 버튼까지 보이도록 높이 확보 */
     #player-container {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  width: 430px;
-  height: 220px;          /* 버튼 영역 포함 */
-  transform: translateY(-50%);
-  margin: 0 auto;
-}
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      width: 430px;
+      height: 220px;               /* 버튼 영역 포함 */
+      transform: translateY(-50%);
+      margin: 0 auto;
+    }
 
+    /* 배경 */
     #player-bg-artwork {
       position: fixed;
       top: -30px;
@@ -53,12 +55,14 @@
       z-index: 2;
     }
 
+    /* ✅ 여기 핵심: height를 줘서 % 높이들이 정상 계산되게 */
     #player {
-  position: relative;
-  z-index: 3;
-  height: 100%;   /* 추가 */
-}
+      position: relative;
+      z-index: 3;
+      height: 100%;
+    }
 
+    /* 상단 정보 카드 */
     #player-track {
       position: absolute;
       top: 0;
@@ -67,7 +71,7 @@
       background-color: #fff7f7;
       border-radius: 15px 15px 0 0;
       transition: 0.3s ease top;
-      padding: 13px 22px 22px 184px; /* 진행바/텍스트 안 잘리게 */
+      padding: 13px 22px 22px 184px;
       z-index: 2;
     }
 
@@ -81,7 +85,6 @@
       color: #54576f;
       margin-bottom: 6px;
       line-height: 1.2;
-      /* 길면 말줄임(원하면 줄바꿈으로 바꿔줄 수 있음) */
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -97,10 +100,8 @@
       text-overflow: ellipsis;
     }
 
-    #player-content::after {
-      content: "";
-  display: block;
-  clear: both;
+    /* ✅ 하단 컨트롤 카드 */
+    #player-content {
       position: relative;
       height: 100%;
       background-color: #fff;
@@ -109,7 +110,16 @@
       z-index: 1;
       overflow: visible;
       margin-top: 40px;
-    
+    }
+
+    /* ✅ float 때문에 부모 높이 무너지는 거 방지 */
+    #player-content::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    /* 앨범 아트 */
     #album-art {
       z-index: 3;
       position: absolute;
@@ -130,16 +140,20 @@
       display: block;
     }
 
+    /* 컨트롤 버튼들 */
     #player-controls {
       width: 250px;
       height: 100%;
       margin: 0 5px 0 141px;
       float: right;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
+    /* ✅ float 레이아웃 대신 flex로 정리 (더 안정적) */
     .control {
-      width: 33.333%;
-      float: left;
+      width: auto;
       padding: 12px 0;
     }
 
@@ -150,11 +164,12 @@
       background-color: #fff;
       border-radius: 6px;
       cursor: pointer;
+      display: grid;
+      place-items: center;
     }
 
     .button i {
       font-size: 26px;
-      text-align: center;
       color: #9aa3b2;
     }
 
@@ -255,36 +270,33 @@
   <!-- JS (jQuery 없음) -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // 1) 곡 목록 (전부 jsDelivr로 통일)
       const tracks = [
-  {
-    artist: "Girl in red",
-    title: "We fell in love in October",
-    audio: "./assets/music/love1.mp3",
-    image: "./assets/img/love1.png"
-  },
-  {
-    artist: "Sahyang & Yoi",
-    title: "Over & Over",
-    audio: "./assets/music/overover.mp3",
-    image: "./assets/img/overover.png"
-  },
-  {
-    artist: "George",
-    title: "Like",
-    audio: "./assets/music/george-like.mp3",
-    image: "./assets/img/george-like.png"
-  },
-  {
-    artist: "H.E.R",
-    title: "best part",
-    audio: "./assets/music/her-bestpart.mp3",
-    image: "./assets/img/her-bestpart.png"
-  }
-];
+        {
+          artist: "Girl in red",
+          title: "We fell in love in October",
+          audio: "./assets/music/love1.mp3",
+          image: "./assets/img/love1.png"
+        },
+        {
+          artist: "Sahyang & Yoi",
+          title: "Over & Over",
+          audio: "./assets/music/overover.mp3",
+          image: "./assets/img/overover.png"
+        },
+        {
+          artist: "George",
+          title: "Like",
+          audio: "./assets/music/george-like.mp3",
+          image: "./assets/img/george-like.png"
+        },
+        {
+          artist: "H.E.R",
+          title: "best part",
+          audio: "./assets/music/her-bestpart.mp3",
+          image: "./assets/img/her-bestpart.png"
+        }
+      ];
 
-
-      // 2) DOM
       const playerTrack = document.querySelector("#player-track");
       const trackTitle = document.querySelector("#track-title");
       const trackSub = document.querySelector("#track-sub");
@@ -301,7 +313,6 @@
       const tProgress = document.querySelector("#current-time");
       const tTime = document.querySelector("#track-length");
 
-      // 3) 오디오
       const audio = new Audio();
       audio.preload = "metadata";
       let currentIndex = 0;
@@ -322,21 +333,17 @@
       async function loadTrack(index, autoPlay = false) {
         const t = tracks[index];
 
-        // 텍스트
         trackTitle.textContent = t.title || "";
         trackSub.textContent = t.artist || "";
 
-        // 이미지
         cover.src = t.image;
         bgArtwork.style.backgroundImage = `url("${t.image}")`;
 
-        // 오디오 리셋 + 로드
         audio.pause();
         audio.currentTime = 0;
         audio.src = t.audio;
         audio.load();
 
-        // UI reset
         seekBar.style.width = "0%";
         tProgress.textContent = "00:00";
         tTime.textContent = "00:00";
@@ -377,7 +384,6 @@
         loadTrack(currentIndex, true);
       }
 
-      // 4) 시간/진행바
       audio.addEventListener("loadedmetadata", () => {
         tTime.textContent = formatTime(audio.duration);
       });
@@ -394,7 +400,6 @@
 
       audio.addEventListener("ended", nextTrack);
 
-      // 진단 로그 (필요하면 남겨두고, 안정되면 지워도 됨)
       audio.addEventListener("error", () => {
         console.log("AUDIO ERROR code:", audio.error?.code, "src:", audio.src);
       });
@@ -402,7 +407,6 @@
         console.log("IMG ERROR src:", cover.src);
       });
 
-      // 5) 진행바 클릭 이동
       sArea.addEventListener("click", (e) => {
         const rect = sArea.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -412,12 +416,10 @@
         audio.currentTime = (x / w) * dur;
       });
 
-      // 6) 버튼 이벤트
       playPauseButton.addEventListener("click", playPause);
       nextBtn.addEventListener("click", nextTrack);
       prevBtn.addEventListener("click", prevTrack);
 
-      // 7) 시작
       loadTrack(currentIndex, false);
     });
   </script>
